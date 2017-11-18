@@ -58,11 +58,16 @@ const promises = [
 
 Promise.all(promises)
     .then(promiseValuesArray => {
-        let i = 0;
-        promiseValuesArray.forEach(promiseValue => {
-            if(promiseValue) {
-                console.log(`${promiseNames[i]} process took: ${calculateMsFromNs(promiseValue)} ms`);
-            }
-            i++;
-        })
+        promiseValuesArray
+            .map((promiseValue, index) => {
+                let wrappedValueObj = {};
+                wrappedValueObj.value = promiseValue;
+                wrappedValueObj.name = promiseNames[index]
+                return wrappedValueObj;
+            })
+            .forEach(wrappedPromiseObj => {
+                if(wrappedPromiseObj.value) {
+                    console.log(`${wrappedPromiseObj.name} process took: ${calculateMsFromNs(wrappedPromiseObj.value)} ms`);
+                }
+            });
     });
